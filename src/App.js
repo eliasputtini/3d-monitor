@@ -282,7 +282,7 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
             mat.transparent = true // allow transparency
 
             if (!isActive) {
-              mat.opacity = 0.5 // make it transparent 
+              mat.opacity = 0.45 // make it transparent 
             } else {
               mat.opacity = 1 // fully visible
               if (isHovered) {
