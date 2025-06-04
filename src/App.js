@@ -3,6 +3,7 @@ import { Canvas, useThree, useFrame } from '@react-three/fiber'
 import { OrbitControls, useGLTF, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import './crt.css'
+import Sidebar from './components/Sidebar'
 
 const modelUrl = "/assets/model.gltf"
 
@@ -382,42 +383,52 @@ function ModelGrid() {
     </>
   )
 }
-
 export default function App() {
+  const [currentView, setCurrentView] = useState('3d')
+
   useEffect(() => {
     useGLTF.preload(modelUrl)
   }, [])
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-      <Canvas orthographic camera={{ zoom: 80, position: [10, 10, 10], near: 0.1, far: 1000 }}>
-        <color attach="background" args={['#f0f2ff']} />
-        <ambientLight intensity={0.7} />
-        <pointLight position={[10, 10, 10]} intensity={0.5} />
-        <directionalLight intensity={0.8} position={[5, 5, 5]} />
+    <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
+      
+      {/* Main Content */}
+      <div style={{ flex: 1, position: 'relative' }}>
+        {currentView === '3d' ? (
+          <>
+            <Canvas orthographic camera={{ zoom: 80, position: [10, 10, 10], near: 0.1, far: 1000 }}>
+              <color attach="background" args={['#f0f2ff']} />
+              <ambientLight intensity={0.7} />
+              <pointLight position={[10, 10, 10]} intensity={0.5} />
+              <directionalLight intensity={0.8} position={[5, 5, 5]} />
 
-        <Suspense fallback={<Loading />}>
-          <ModelGrid />
-        </Suspense>
+              <Suspense fallback={<Loading />}>
+                <ModelGrid />
+              </Suspense>
 
-        <OrbitControls
-          enableZoom={true}
-          enablePan={true}
-          enableRotate={true}
-          makeDefault
-          target={[0, 0, 0]}
-          minPolarAngle={Math.PI / 4}
-          maxPolarAngle={Math.PI / 4}
-        />
-      </Canvas>
+              <OrbitControls
+                enableZoom={true}
+                enablePan={true}
+                enableRotate={true}
+                makeDefault
+                target={[0, 0, 0]}
+                minPolarAngle={Math.PI / 4}
+                maxPolarAngle={Math.PI / 4}
+              />
+            </Canvas>
 
-      <img
-        src="/assets/logo.svg"
-        alt="Logo"
-        style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
-      />
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+            />
+          </>
+        ) : (
+         <>hello world</>
+        )}
+      </div>
     </div>
   )
 }
-
-
