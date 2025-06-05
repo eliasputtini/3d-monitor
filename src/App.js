@@ -4,7 +4,7 @@ import { OrbitControls, useGLTF, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import './crt.css'
 import Sidebar from './components/Sidebar'
-
+import ThreeD_BarChart from './components/Chart/chart'
 const modelUrl = "/assets/model.gltf"
 
 function Loading() {
@@ -393,7 +393,7 @@ export default function App() {
   return (
     <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
       <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
-      
+
       {/* Main Content */}
       <div style={{ flex: 1, position: 'relative' }}>
         {currentView === '3d' ? (
@@ -426,7 +426,7 @@ export default function App() {
             />
           </>
         ) : (
-         <>hello world</>
+          <ThreeD_BarChart />
         )}
       </div>
     </div>
