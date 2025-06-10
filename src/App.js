@@ -247,6 +247,9 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
   const ref = useRef()
   const { scene } = useGLTF(modelUrl)
   const [clicked, setClicked] = useState(false)
+  const [showVideo, setShowVideo] = useState(false) // Start with radar
+  const [clickCount, setClickCount] = useState(0)
+  const clickTimeoutRef = useRef(null)
   const clonedScene = useRef()
 
   const isHovered = hoveredIndex === index
@@ -255,6 +258,40 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
   const ip = data?.ip || `192.168.0.${index + 10}`
   const score = data?.score ?? (30 + index * 7 % 70)
 
+  // Handle radar double-click
+  const handleRadarClick = (e) => {
+    e.stopPropagation()
+
+    setClickCount(prev => prev + 1)
+
+    // Clear existing timeout
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current)
+    }
+
+    // Set timeout to reset click count
+    clickTimeoutRef.current = setTimeout(() => {
+      setClickCount(0)
+    }, 300) // 300ms window for double-click
+
+    // Check if it's a double-click
+    if (clickCount + 1 >= 2) {
+      setShowVideo(true)
+      setClickCount(0)
+      clearTimeout(clickTimeoutRef.current)
+    }
+  }
+
+  // Clean up timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (clickTimeoutRef.current) {
+        clearTimeout(clickTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  // Your existing useMemo and useEffect code for materials...
   useMemo(() => {
     if (scene && !clonedScene.current) {
       clonedScene.current = scene.clone(true)
@@ -280,12 +317,12 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
       clonedScene.current.traverse((node) => {
         if (node.isMesh && node.material) {
           const applyStyle = (mat) => {
-            mat.transparent = true // allow transparency
+            mat.transparent = true
 
             if (!isActive) {
-              mat.opacity = 0.45 // make it transparent 
+              mat.opacity = 0.45
             } else {
-              mat.opacity = 1 // fully visible
+              mat.opacity = 1
               if (isHovered) {
                 mat.color.set('#b0ecff')
               } else {
@@ -315,25 +352,49 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
       />
 
       {isActive && (
-        <Html position={[-0.28, 0.55, 0.28]} transform occlude rotation={[0, Math.PI / 2, 0]} pointerEvents='none'>
-          <div class="container" style={{
-            pointerEvents: 'none', background: 'white', color: 'black', fontSize: '2px', fontFamily: 'Arial, sans-serif', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', whiteSpace: 'nowrap', width: 20, height: 18
+        <Html position={[-0.28, 0.55, 0.28]} transform occlude rotation={[0, Math.PI / 2, 0]}>
+          <div className="container" style={{
+            background: 'white',
+            color: 'black',
+            fontSize: '2px',
+            fontFamily: 'Arial, sans-serif',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+            whiteSpace: 'nowrap',
+            width: 20,
+            height: 18
           }}>
-            <img
-              src="/assets/radar.gif"
-              alt="Active Status"
-              style={{
-                width: '20px',
-                height: '18px',
-                pointerEvents: 'none',
-                filter: 'saturate(1000%)',
-              }}
-            />
+            {showVideo ? (
+              <iframe
+                src="https://www.youtube.com/embed/5E3Yb4AWNNs"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                style={{
+                  width: '200px',
+                  height: '200px',
+                  border: 'none',
+                  transform: 'scale(0.1)',
+                  transformOrigin: 'top left',
+                }}
+              />
+            ) : (
+              <img
+                src="/assets/radar.gif"
+                alt="Active Status"
+                onClick={handleRadarClick}
+                style={{
+                  width: '20px',
+                  height: '18px',
+                  cursor: 'pointer',
+                  filter: 'saturate(1000%)',
+                }}
+              />
+            )}
           </div>
         </Html>
       )}
 
-      <Html position={[0, 2, 0.3]} center occlude>
+      {/* Your existing Html label code... */}
+      <Html position={[-0.5, 2, 0.3]} center occlude>
         <div
           style={{
             background: isActive ? '#14324C' : '#0B1724',
@@ -368,7 +429,6 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
           </div>
         </div>
       </Html>
-
     </group>
   )
 }
@@ -436,8 +496,14 @@ export default function App() {
               style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
             />
           </>
-        ) : (
+        ) : (<>
           <ThreeD_BarChart />
+          <img
+            src="/assets/logo.svg"
+            alt="Logo"
+            style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+          />
+        </>
         )}
       </div>
     </div>
