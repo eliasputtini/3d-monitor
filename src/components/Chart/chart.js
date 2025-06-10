@@ -270,7 +270,7 @@ const ThreeDBarChartCanvas = () => {
           borderRadius: '8px',
           fontWeight: 500,
           backgroundColor: isTransitioning ? '#aaa' : '#2563eb', // gray or blue
-          color: isTransitioning ? '#eee' : '#fff',
+          color: isTransitioning ? '#eee' : '#ffff',
           cursor: isTransitioning ? 'not-allowed' : 'pointer',
           boxShadow: isTransitioning ? 'none' : '0 4px 10px rgba(0,0,0,0.2)',
           transition: 'all 0.2s ease',
