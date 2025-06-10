@@ -315,10 +315,21 @@ function Model({ position, scale = 0.5, index, hoveredIndex, setHoveredIndex, da
       />
 
       {isActive && (
-        <Html position={[-0.27, 0.6, 0.29]} transform occlude rotation={[0, Math.PI / 2, 0]} pointerEvents='none'>
+        <Html position={[-0.28, 0.55, 0.28]} transform occlude rotation={[0, Math.PI / 2, 0]} pointerEvents='none'>
           <div class="container" style={{
-            pointerEvents: 'none', background: 'white', color: 'black', fontSize: '2px', fontFamily: 'Arial, sans-serif', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', border: '1px solid #ddd', whiteSpace: 'nowrap', width: 20, height: 20
-          }}> ON</div>
+            pointerEvents: 'none', background: 'white', color: 'black', fontSize: '2px', fontFamily: 'Arial, sans-serif', boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)', whiteSpace: 'nowrap', width: 20, height: 18
+          }}>
+            <img
+              src="/assets/radar.gif"
+              alt="Active Status"
+              style={{
+                width: '20px',
+                height: '18px',
+                pointerEvents: 'none',
+                filter: 'saturate(1000%)',
+              }}
+            />
+          </div>
         </Html>
       )}
 
