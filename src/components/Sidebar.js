@@ -32,6 +32,9 @@ function Sidebar({ currentView, setCurrentView }) {
       <button onClick={() => setCurrentView('details')} style={buttonStyle(currentView === 'details')}>
         Details
       </button>
+      <button onClick={() => setCurrentView('worldmap')} style={buttonStyle(currentView === 'worldmap')}>
+        Worldmap
+      </button>
     </div>
   );
 }

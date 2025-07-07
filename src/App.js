@@ -6,6 +6,8 @@ import './crt.css'
 import Sidebar from './components/Sidebar'
 import ThreeD_BarChart from './components/Chart/chart'
 const modelUrl = "/assets/model.gltf"
+import WorldMap from './components/WorldMap'
+import mock from './mock.json'
 
 function Loading() {
   return (
@@ -16,205 +18,6 @@ function Loading() {
   )
 }
 
-const mock = {
-  "count": 8,
-  "data": [
-    {
-      "id": "110",
-      "name": "win2019",
-      "ip": "192.168.82.103",
-      "os": {
-        "name": "Microsoft Windows Server 2019 Standard Evaluation",
-        "platform": "windows",
-        "version": "10.0.17763"
-      },
-      "scaScore": 50,
-      "group": [
-        "windows",
-        "servers"
-      ],
-      "status": "active",
-      "lastKeepAlive": "2025-05-08T20:10:55Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2025-02-12T14:41:34Z",
-      "category": "server",
-      "customGroup": ""
-    },
-    {
-      "id": "113",
-      "name": "ubunturce",
-      "ip": "192.168.82.105",
-      "os": {
-        "name": "Ubuntu",
-        "platform": "ubuntu",
-        "version": "18.04.6 LTS"
-      },
-      "scaScore": 10,
-      "group": [
-        "linux"
-      ],
-      "status": "active",
-      "lastKeepAlive": "2025-05-08T20:10:55Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2025-04-30T14:51:49Z",
-      "category": "endpoint",
-      "customGroup": ""
-    },
-    {
-      "id": "112",
-      "name": "debian",
-      "ip": "192.168.82.101",
-      "os": {
-        "name": "Debian GNU/Linux",
-        "platform": "debian",
-        "version": "11"
-      },
-      "scaScore": 20,
-      "group": [
-        "linux"
-      ],
-      "status": "inactive",
-      "lastKeepAlive": "2025-05-08T20:10:52Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2025-04-08T13:54:20Z",
-      "category": "endpoint",
-      "customGroup": ""
-    },
-    {
-      "id": "108",
-      "name": "redhat-9",
-      "ip": "192.168.82.104",
-      "os": {
-        "name": "Red Hat Enterprise Linux",
-        "platform": "rhel",
-        "version": "8.9"
-      },
-      "scaScore": 90,
-      "group": [
-        "linux"
-      ],
-      "status": "active",
-      "lastKeepAlive": "2025-05-08T20:10:51Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2024-12-17T08:09:20Z",
-      "category": "endpoint",
-      "customGroup": ""
-    },
-    {
-      "id": "115",
-      "name": "lab",
-      "ip": "192.168.82.100",
-      "os": {
-        "name": "Ubuntu",
-        "platform": "ubuntu",
-        "version": "22.04"
-      },
-      "scaScore": 0,
-      "group": [
-        "linux"
-      ],
-      "status": "active",
-      "lastKeepAlive": "2025-05-08T20:10:51Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2025-05-06T12:37:37Z",
-      "category": "endpoint",
-      "customGroup": ""
-    },
-    {
-      "id": "008",
-      "name": "Vigilant-Sensor-Rocky",
-      "ip": "192.168.82.108",
-      "os": {
-        "name": "Rocky Linux",
-        "platform": "rocky",
-        "version": "8.10"
-      },
-      "scaScore": 20,
-      "group": [
-        "sensores",
-        "Sensores"
-      ],
-      "status": "inactive",
-      "lastKeepAlive": "2025-05-08T20:10:50Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2024-02-06T21:39:07Z",
-      "category": "sensor",
-      "customGroup": "Sensores"
-    },
-    {
-      "id": "104",
-      "name": "WIN-276NJNFQ1S8",
-      "ip": "192.168.82.102",
-      "os": {
-        "name": "Microsoft Windows Server 2019 Standard Evaluation",
-        "platform": "windows",
-        "version": "10.0.17763"
-      },
-      "scaScore": 30,
-      "group": [
-        "windows",
-        "endpoint"
-      ],
-      "status": "active",
-      "lastKeepAlive": "2025-05-08T20:10:49Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2024-12-11T13:17:17Z",
-      "category": "endpoint",
-      "customGroup": ""
-    },
-    {
-      "id": "114",
-      "name": "Teste",
-      "ip": "192.168.15.8",
-      "os": {
-        "name": "Microsoft Windows 11 Pro",
-        "platform": "windows",
-        "version": "10.0.22631"
-      },
-      "scaScore": 40,
-      "group": [
-        "windows",
-        "servers"
-      ],
-      "status": "disconnected",
-      "lastKeepAlive": "2025-05-07T10:37:31Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2025-05-05T21:50:51Z",
-      "category": "server",
-      "customGroup": ""
-    },
-    {
-      "id": "114",
-      "name": "EMERSONSILV38BC",
-      "ip": "192.168.15.81",
-      "os": {
-        "name": "Microsoft Windows 11 Pro",
-        "platform": "windows",
-        "version": "10.0.22631"
-      },
-      "scaScore": 40,
-      "group": [
-        "windows",
-        "servers"
-      ],
-      "status": "disconnected",
-      "lastKeepAlive": "2025-05-07T10:37:31Z",
-      "manager": "Vigilant-LabMalware.vigilant.com.br",
-      "node_name": "node01",
-      "dateAdd": "2025-05-05T21:50:51Z",
-      "category": "server",
-      "customGroup": ""
-    }
-  ]
-}
 
 const mockModels = mock.data.map((item, index) => ({
   id: item.id,
@@ -454,6 +257,7 @@ function ModelGrid() {
     </>
   )
 }
+
 export default function App() {
   const [currentView, setCurrentView] = useState('3d')
 
@@ -461,13 +265,10 @@ export default function App() {
     useGLTF.preload(modelUrl)
   }, [])
 
-  return (
-    <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
-      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
-
-      {/* Main Content */}
-      <div style={{ flex: 1, position: 'relative' }}>
-        {currentView === '3d' ? (
+  const renderContent = () => {
+    switch (currentView) {
+      case '3d':
+        return (
           <>
             <Canvas orthographic camera={{ zoom: 80, position: [10, 10, 10], near: 0.1, far: 1000 }}>
               <color attach="background" args={['#f0f2ff']} />
@@ -496,15 +297,41 @@ export default function App() {
               style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
             />
           </>
-        ) : (<>
-          <ThreeD_BarChart />
-          <img
-            src="/assets/logo.svg"
-            alt="Logo"
-            style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
-          />
-        </>
-        )}
+        )
+      case 'details':
+        return (
+          <>
+            <ThreeD_BarChart />
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+            />
+          </>
+        )
+      case 'worldmap':
+        return (
+          <>
+            <WorldMap />
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+            />
+          </ >
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', width: '100vw' }}>
+      <Sidebar currentView={currentView} setCurrentView={setCurrentView} />
+
+      {/* Main Content */}
+      <div style={{ flex: 1, position: 'relative' }}>
+        {renderContent()}
       </div>
     </div>
   )
