@@ -284,7 +284,6 @@ const ThreeDBarChartCanvas = () => {
 
       <Canvas
         orthographic
-        shadows
         dpr={[1, 2]}
         camera={{ position: [8, 8, 8], zoom: 50 }}
       >

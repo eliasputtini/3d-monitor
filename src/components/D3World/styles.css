@@ -1,0 +1,68 @@
+/* world-map.css */
+
+.world-map-container {
+    background-color: #f0f2ff;
+    font-family: sans-serif;
+    color: #11253B;
+    padding: 2rem;
+}
+
+.world-map-box {
+    color: #11253B;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.world-map-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+
+    color: #11253B;
+}
+
+.loading-text {
+    color: #11253B;
+    text-align: center;
+}
+
+.error-text {
+    color: #f56565;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.instructions {
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
+
+    color: #11253B;
+}
+
+.instructions p {
+    margin: 0.2rem 0;
+}
+
+.marker-button-container {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.marker-button {
+    padding: 0.5rem 1rem;
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.marker-button:hover {
+    background-color: #c53030;
+}
