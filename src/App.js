@@ -7,6 +7,7 @@ import Sidebar from './components/Sidebar'
 import ThreeD_BarChart from './components/Chart/chart'
 const modelUrl = "/assets/model.gltf"
 import WorldMap from './components/WorldMap'
+import World3D from './components/3dWorld'
 import mock from './mock.json'
 
 function Loading() {
@@ -313,6 +314,17 @@ export default function App() {
         return (
           <>
             <WorldMap />
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+            />
+          </ >
+        )
+      case '3dworld':
+        return (
+          <>
+            <World3D />
             <img
               src="/assets/logo.svg"
               alt="Logo"
