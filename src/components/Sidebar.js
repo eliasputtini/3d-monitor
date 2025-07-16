@@ -41,6 +41,9 @@ function Sidebar({ currentView, setCurrentView }) {
       <button onClick={() => setCurrentView('D3World')} style={buttonStyle(currentView === 'D3World')}>
         d3 world
       </button>
+       <button onClick={() => setCurrentView('flatd3')} style={buttonStyle(currentView === 'flatd3')}>
+        D3Flat
+      </button>
     </div>
   );
 }

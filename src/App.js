@@ -9,6 +9,7 @@ const modelUrl = "/assets/model.gltf"
 import WorldMap from './components/WorldMap'
 import World3D from './components/3dWorld'
 import D3World from './components/D3World'
+import Flatd3 from './components/flatd3'
 import mock from './mock.json'
 
 function Loading() {
@@ -337,6 +338,17 @@ export default function App() {
         return (
           <>
             <D3World />
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+            />
+          </ >
+        )
+      case 'flatd3':
+        return (
+          <>
+            <Flatd3 />
             <img
               src="/assets/logo.svg"
               alt="Logo"
