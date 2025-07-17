@@ -25,24 +25,26 @@ function Sidebar({ currentView, setCurrentView }) {
       gap: '10px',
       boxShadow: '2px 0 5px rgba(0,0,0,0.1)',
     }}>
-      <h2 style={{ marginBottom: '20px', fontSize: '18px' }}>Navigation</h2>
-      <button onClick={() => setCurrentView('3d')} style={buttonStyle(currentView === '3d')}>
-        3D View
+      <button onClick={() => setCurrentView('3DMonitor')} style={buttonStyle(currentView === '3DMonitor')}>
+        3D Monitor
       </button>
       <button onClick={() => setCurrentView('details')} style={buttonStyle(currentView === 'details')}>
-        Details
+        Chart Killchain
       </button>
-      <button onClick={() => setCurrentView('worldmap')} style={buttonStyle(currentView === 'worldmap')}>
-        Worldmap
+      <button onClick={() => setCurrentView('DottedMap')} style={buttonStyle(currentView === 'DottedMap')}>
+        DottedMap
       </button>
       <button onClick={() => setCurrentView('3dworld')} style={buttonStyle(currentView === '3dworld')}>
-        3d world
+        ThreeJS 3D Globe
       </button>
       <button onClick={() => setCurrentView('D3World')} style={buttonStyle(currentView === 'D3World')}>
-        d3 world
+        D3 Globe
       </button>
-       <button onClick={() => setCurrentView('flatd3')} style={buttonStyle(currentView === 'flatd3')}>
-        D3Flat
+      <button onClick={() => setCurrentView('flatd3')} style={buttonStyle(currentView === 'flatd3')}>
+        D3 Flat
+      </button>
+      <button onClick={() => setCurrentView('ReactSimpleMap')} style={buttonStyle(currentView === 'ReactSimpleMap')}>
+        React Simple Map
       </button>
     </div>
   );

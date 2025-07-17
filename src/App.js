@@ -6,11 +6,12 @@ import './crt.css'
 import Sidebar from './components/Sidebar'
 import ThreeD_BarChart from './components/Chart/chart'
 const modelUrl = "/assets/model.gltf"
-import WorldMap from './components/WorldMap'
+import DottedMap from './components/DottedMap'
 import World3D from './components/3dWorld'
 import D3World from './components/D3World'
 import Flatd3 from './components/flatd3'
 import mock from './mock.json'
+import ReactSimpleMap from './components/ReactSimpleMap'
 
 function Loading() {
   return (
@@ -270,7 +271,7 @@ export default function App() {
 
   const renderContent = () => {
     switch (currentView) {
-      case '3d':
+      case '3DMonitor':
         return (
           <>
             <Canvas orthographic camera={{ zoom: 80, position: [10, 10, 10], near: 0.1, far: 1000 }}>
@@ -312,10 +313,10 @@ export default function App() {
             />
           </>
         )
-      case 'worldmap':
+      case 'DottedMap':
         return (
           <>
-            <WorldMap />
+            <DottedMap />
             <img
               src="/assets/logo.svg"
               alt="Logo"
@@ -349,6 +350,17 @@ export default function App() {
         return (
           <>
             <Flatd3 />
+            <img
+              src="/assets/logo.svg"
+              alt="Logo"
+              style={{ position: 'absolute', top: '10px', left: '10px', width: '200px', height: 'auto' }}
+            />
+          </ >
+        )
+      case 'ReactSimpleMap':
+        return (
+          <>
+            <ReactSimpleMap />
             <img
               src="/assets/logo.svg"
               alt="Logo"

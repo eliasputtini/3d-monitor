@@ -8,11 +8,40 @@ export default function FlatWorldMap() {
   const projectionRef = useRef(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [markers, setMarkers] = useState([])
-  const [currentProjection, setCurrentProjection] = useState('naturalEarth')
+  const [markers, setMarkers] = useState([
+    {
+      name: 'São Paulo',
+      coords: [-46.6333, -23.5505],
+      color: '#ff4444'
+    },
+    {
+      name: 'France',
+      coords: [2.3522, 48.8566], // Paris, França
+      color: '#4444ff'
+    },
+    {
+      name: 'China',
+      coords: [116.4074, 39.9042], // Beijing, China
+      color: '#44ff44'
+    }
+  ])
+  const [currentProjection, setCurrentProjection] = useState('mercator')
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
   // Cache de elementos para evitar re-seleção
   const elementsRef = useRef({})
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      const width = window.innerWidth
+      const height = window.innerHeight
+      setDimensions({ width, height })
+    }
+
+    updateDimensions()
+    window.addEventListener('resize', updateDimensions)
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [])
 
   const updatePaths = () => {
     if (!projectionRef.current || !svgRef.current) return
@@ -47,35 +76,37 @@ export default function FlatWorldMap() {
   const changeProjection = (projectionType) => {
     if (!elementsRef.current.svg) return
 
-    const width = 900
-    const height = 500
+    const { width, height } = dimensions
+    if (width === 0 || height === 0) return
 
     let newProjection
+    const scale = Math.min(width, height) / 6 // Responsive scaling
+
     switch (projectionType) {
       case 'mercator':
         newProjection = d3.geoMercator()
-          .scale(140)
+          .scale(scale * 2)
           .translate([width / 2, height / 2])
         break
       case 'naturalEarth':
         newProjection = d3.geoNaturalEarth1()
-          .scale(140)
-          .translate([width / 2, height / 2])
+          .scale(scale * 1.5)
+          .translate([width / 2.3, height / 2.3])
         break
       case 'orthographic':
         newProjection = d3.geoOrthographic()
-          .scale(200)
-          .translate([width / 2, height / 2])
+          .scale(scale * 2)
+          .translate([width / 2.3, height / 2.3])
           .clipAngle(90)
         break
       case 'equirectangular':
         newProjection = d3.geoEquirectangular()
-          .scale(140)
+          .scale(scale * 2)
           .translate([width / 2, height / 2])
         break
       default:
-        newProjection = d3.geoNaturalEarth1()
-          .scale(140)
+        newProjection = d3.geoMercator()
+          .scale(scale * 2)
           .translate([width / 2, height / 2])
     }
 
@@ -88,12 +119,13 @@ export default function FlatWorldMap() {
   }
 
   useEffect(() => {
-    const width = 900
-    const height = 500
+    if (dimensions.width === 0 || dimensions.height === 0) return
 
-    // Inicializar com projeção Natural Earth
-    projectionRef.current = d3.geoNaturalEarth1()
-      .scale(140)
+    const { width, height } = dimensions
+    const scale = Math.min(width, height) / 6
+    //default projekction
+    projectionRef.current = d3.geoMercator()
+      .scale(scale * 2)
       .translate([width / 2, height / 2])
 
     const projection = projectionRef.current
@@ -113,8 +145,8 @@ export default function FlatWorldMap() {
     svg.append('rect')
       .attr('width', width)
       .attr('height', height)
-      .style('fill', '#f0f8ff')
-      .style('stroke', 'rgba(0, 0, 0, 0.1)')
+      .style('fill', '#0a0a0a')
+      .style('stroke', 'rgba(255, 255, 255, 0.1)')
       .style('stroke-width', '1px')
 
     // Graticule (linhas de grade)
@@ -123,8 +155,8 @@ export default function FlatWorldMap() {
       .attr('class', 'graticule')
       .attr('d', path)
       .style('fill', 'none')
-      .style('stroke', '#000')
-      .style('stroke-opacity', 0.08)
+      .style('stroke', '#333')
+      .style('stroke-opacity', 0.3)
       .style('stroke-width', '0.5px')
 
     // Implementar pan e zoom para mapa flat
@@ -152,15 +184,15 @@ export default function FlatWorldMap() {
           .append('path')
           .attr('class', 'country')
           .attr('d', path)
-          .style('fill', '#737368')
-          .style('stroke', '#fff')
+          .style('fill', '#2a2a2a')
+          .style('stroke', '#444')
           .style('stroke-width', '0.5px')
           .style('stroke-linejoin', 'round')
           .on('mouseover', function () {
-            d3.select(this).style('fill', '#8a8a7f')
+            d3.select(this).style('fill', '#3a3a3a')
           })
           .on('mouseout', function () {
-            d3.select(this).style('fill', '#737368')
+            d3.select(this).style('fill', '#2a2a2a')
           })
 
         setIsLoading(false)
@@ -171,7 +203,7 @@ export default function FlatWorldMap() {
         setIsLoading(false)
       })
 
-  }, [])
+  }, [dimensions])
 
   useEffect(() => {
     const svg = d3.select(svgRef.current)
@@ -185,7 +217,7 @@ export default function FlatWorldMap() {
         .enter()
         .append('circle')
         .attr('class', 'marker')
-        .attr('r', 6)
+        .attr('r', 8)
         .style('fill', d => d.color || 'red')
         .style('stroke', 'white')
         .style('stroke-width', '2px')
@@ -217,166 +249,171 @@ export default function FlatWorldMap() {
     }
   }, [markers])
 
-  const handleAddMarkers = () => {
-    setMarkers([
-      {
-        name: 'São Paulo',
-        coords: [-46.6333, -23.5505],
-        color: 'red'
-      },
-      {
-        name: 'France',
-        coords: [2.3522, 48.8566], // Paris, França
-        color: 'blue'
-      }
-    ])
-  }
+
 
   const handleClearMarkers = () => {
     setMarkers([])
   }
 
   const projectionOptions = [
-    { value: 'naturalEarth', label: 'Natural Earth' },
     { value: 'mercator', label: 'Mercator' },
-    { value: 'robinson', label: 'Robinson' },
-    { value: 'equirectangular', label: 'Equirectangular' }
+    { value: 'naturalEarth', label: 'Natural Earth' },
+    { value: 'equirectangular', label: 'Equirectangular' },
+    { value: 'orthographic', label: 'Orthographic' }
   ]
 
   return (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif'
+    <div style={{
+      flex: 1,
+      height: '100vh',
+      background: 'linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%)',
+      display: 'flex',
+      flexDirection: 'column',
+      overflow: 'hidden'
     }}>
-      <div style={{ 
-        maxWidth: '920px', 
-        width: '100%',
-        backgroundColor: 'white',
-        borderRadius: '10px',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-        padding: '20px'
+      {/* Control Card */}
+      <div style={{
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        zIndex: 10,
+        margin: '20px 20px 0 20px',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(10px)',
+        borderRadius: '15px',
+        padding: '20px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
       }}>
-        <h1 style={{ 
-          textAlign: 'center', 
-          marginBottom: '20px',
-          color: '#333',
-          fontSize: '24px'
-        }}>
-          Interactive Flat World Map
-        </h1>
-        
-        {isLoading && (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '20px',
-            color: '#666'
-          }}>
-            Loading world map...
-          </div>
-        )}
-        
-        {error && (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '20px',
-            color: '#d32f2f'
-          }}>
-            Error: {error}
-          </div>
-        )}
-        
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          marginBottom: '20px'
-        }}>
-          <svg ref={svgRef} style={{ 
-            border: '1px solid #ddd',
-            borderRadius: '5px'
-          }}></svg>
-        </div>
-        
-        <div style={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center', 
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           gap: '15px'
         }}>
-          <div style={{ 
-            display: 'flex', 
+          <h1 style={{
+            color: 'white',
+            fontSize: '20px',
+            fontWeight: 'bold',
+            margin: 0,
+            textShadow: '0 2px 4px rgba(0, 0, 0, 0.5)'
+          }}>
+            🌍 Interactive World Map
+          </h1>
+
+          <div style={{
+            display: 'flex',
             flexWrap: 'wrap',
             gap: '10px',
-            justifyContent: 'center'
+            alignItems: 'center'
           }}>
-            <button 
-              onClick={handleAddMarkers}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
-            >
-              Mark São Paulo & France
-            </button>
-            <button 
-              onClick={handleClearMarkers}
-              style={{
-                padding: '10px 20px',
-                backgroundColor: '#f44336',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
-            >
-              Clear Markers
-            </button>
+
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              padding: '4px',
+              borderRadius: '10px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <span style={{ color: 'white', fontSize: '14px', fontWeight: '500' }}>🗺️</span>
+              {projectionOptions.map(option => (
+                <button
+                  key={option.value}
+                  onClick={() => changeProjection(option.value)}
+                  style={{
+                    padding: '6px 12px',
+                    background: currentProjection === option.value
+                      ? 'linear-gradient(45deg, #2196F3, #1976D2)'
+                      : 'rgba(255, 255, 255, 0.1)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    transition: 'all 0.3s ease',
+                    boxShadow: currentProjection === option.value
+                      ? '0 4px 15px rgba(33, 150, 243, 0.3)'
+                      : 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentProjection !== option.value) {
+                      e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (currentProjection !== option.value) {
+                      e.target.style.background = 'rgba(255, 255, 255, 0.1)'
+                    }
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
           </div>
-          
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '10px'
-          }}>
-            <label style={{ fontWeight: 'bold' }}>Projection:</label>
-            {projectionOptions.map(option => (
-              <button
-                key={option.value}
-                onClick={() => changeProjection(option.value)}
-                style={{
-                  padding: '5px 10px',
-                  backgroundColor: currentProjection === option.value ? '#2196F3' : '#e0e0e0',
-                  color: currentProjection === option.value ? 'white' : '#333',
-                  border: 'none',
-                  borderRadius: '3px',
-                  cursor: 'pointer',
-                  fontSize: '12px'
-                }}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-          
-          <div style={{ 
-            textAlign: 'center', 
+        </div>
+
+        {(isLoading || error) && (
+          <div style={{
+            textAlign: 'center',
+            padding: '10px',
+            color: isLoading ? '#fff' : '#ff6b6b',
             fontSize: '14px',
-            color: '#666',
-            lineHeight: '1.5'
+            marginTop: '10px'
           }}>
-            <p>🖱️ <strong>Drag</strong> to pan the map</p>
-            <p>🖱️ <strong>Scroll</strong> to zoom in/out</p>
-            <p>🌍 <strong>Hover</strong> over countries to highlight them</p>
-            <p>🗺️ <strong>Switch projections</strong> to see different map views</p>
+            {isLoading ? '🌐 Loading world map...' : `❌ Error: ${error}`}
           </div>
+        )}
+      </div>
+
+      {/* Map Container */}
+      <div style={{
+        flex: 1,
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <svg
+          ref={svgRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            cursor: 'grab'
+          }}
+          onMouseDown={(e) => {
+            e.currentTarget.style.cursor = 'grabbing'
+          }}
+          onMouseUp={(e) => {
+            e.currentTarget.style.cursor = 'grab'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.cursor = 'grab'
+          }}
+        />
+
+        {/* Instructions overlay */}
+        <div style={{
+          position: 'absolute',
+          bottom: '20px',
+          right: '20px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          backdropFilter: 'blur(10px)',
+          padding: '15px',
+          borderRadius: '10px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          fontSize: '12px',
+          lineHeight: '1.4',
+          maxWidth: '300px'
+        }}>
+          <div style={{ marginBottom: '8px', fontWeight: 'bold' }}>🕹️ Controls:</div>
+          <div>🖱️ <strong>Drag</strong> to pan • <strong>Scroll</strong> to zoom</div>
+          <div>🌍 <strong>Hover</strong> countries to highlight</div>
+          <div>🗺️ <strong>Switch projections</strong> for different views</div>
         </div>
       </div>
     </div>
